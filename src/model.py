@@ -36,7 +36,6 @@ class QTrainer:
         action = torch.tensor(action, dtype=torch.long)
         reward = torch.tensor(reward, dtype=torch.float)
         # (n, x)
-
         if len(state.shape) == 1:
             # (1, x) -> เปลี่ยนรูปแบบถ้ามาแค่ค่าเดียว
             state = torch.unsqueeze(state, 0)
@@ -45,7 +44,7 @@ class QTrainer:
             reward = torch.unsqueeze(reward, 0)
             done = (done, )
 
-        # 1: ทำนายค่า Q ปัจจุบัน
+        # ทำนายค่า Q ปัจจุบัน
         pred = self.model(state)
 
         target = pred.clone()
@@ -57,7 +56,7 @@ class QTrainer:
 
             target[idx][torch.argmax(action[idx]).item()] = Q_new
     
-        # 2: คำนวณ Loss และปรับแก้สมอง (Backpropagation)
+        #  คำนวณ Loss และปรับแก้(Backpropagation)
         self.optimizer.zero_grad()
         loss = self.criterion(target, pred)
         loss.backward()

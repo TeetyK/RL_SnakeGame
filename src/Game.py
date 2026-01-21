@@ -51,26 +51,26 @@ class SnakeGameAI:
         if self.food in self.snake:
             self._place_food()
 
-    def play_step(self):
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                quit()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_LEFT:
-                    self.direction = Direction.LEFT
-                elif event.key == pygame.K_RIGHT:
-                    self.direction = Direction.RIGHT
-                elif event.key == pygame.K_UP:
-                    self.direction = Direction.UP
-                elif event.key == pygame.K_DOWN:
-                    self.direction = Direction.DOWN
-        self._move(self.direction)
-        self.snake.insert(0, self.head)
-        # self.frame_iteration += 1
-        # # Action with AI
-        # self._move(action) 
+    def play_step(self,action):
+        # for event in pygame.event.get():
+        #     if event.type == pygame.QUIT:
+        #         pygame.quit()
+        #         quit()
+        #     if event.type == pygame.KEYDOWN:
+        #         if event.key == pygame.K_LEFT:
+        #             self.direction = Direction.LEFT
+        #         elif event.key == pygame.K_RIGHT:
+        #             self.direction = Direction.RIGHT
+        #         elif event.key == pygame.K_UP:
+        #             self.direction = Direction.UP
+        #         elif event.key == pygame.K_DOWN:
+        #             self.direction = Direction.DOWN
+        # self._move(self.direction)
         # self.snake.insert(0, self.head)
+        self.frame_iteration += 1
+        # Action with AI
+        self._move(action) 
+        self.snake.insert(0, self.head)
         
         # GAME CHECK
         reward = 0
@@ -94,7 +94,7 @@ class SnakeGameAI:
         self.clock.tick(SPEED)
         
         # return reward, game_over, self.score
-        return game_over, self.score
+        return reward ,game_over, self.score
 
     def is_collision(self, pt=None):
         if pt is None:
@@ -119,19 +119,19 @@ class SnakeGameAI:
 
     def _move(self, action):
         # [Straight, Right, Left]
-        # clock_wise = [Direction.RIGHT, Direction.DOWN, Direction.LEFT, Direction.UP]
-        # idx = clock_wise.index(self.direction)
+        clock_wise = [Direction.RIGHT, Direction.DOWN, Direction.LEFT, Direction.UP]
+        idx = clock_wise.index(self.direction)
 
-        # if np.array_equal(action, [1, 0, 0]):
-        #     new_dir = clock_wise[idx] #  GO HEAD
-        # elif np.array_equal(action, [0, 1, 0]):
-        #     next_idx = (idx + 1) % 4
-        #     new_dir = clock_wise[next_idx] # RIGHT
-        # else: # [0, 0, 1]
-        #     next_idx = (idx - 1) % 4
-        #     new_dir = clock_wise[next_idx] # LEFT
+        if np.array_equal(action, [1, 0, 0]):
+            new_dir = clock_wise[idx] #  GO HEAD
+        elif np.array_equal(action, [0, 1, 0]):
+            next_idx = (idx + 1) % 4
+            new_dir = clock_wise[next_idx] # RIGHT
+        else: # [0, 0, 1]
+            next_idx = (idx - 1) % 4
+            new_dir = clock_wise[next_idx] # LEFT
 
-        # self.direction = new_dir
+        self.direction = new_dir
 
         x = self.head.x
         y = self.head.y
